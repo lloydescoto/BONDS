@@ -12,6 +12,9 @@ stage.add(layer);
 
 
 stage.on('click', function (e) {
+  var group = new Konva.Group({
+	 draggable: true 
+  });
   var position = JSON.parse(JSON.stringify(stage.getPointerPosition()));
   var simpleText = new Konva.Text({
       x: position['x'] - 11,
@@ -62,10 +65,17 @@ stage.on('click', function (e) {
 	  var angleDiff = frame.timeDiff * angularSpeed / 1000;
 	  atom.rotate(angleDiff);
   }, layer);
-  layer.add(molecule).draw();
-  layer.add(simpleText).draw();
-  layer.add(ringMolecule).draw();
-  layer.add(ringMolecule2).draw();
-  layer.add(atom).draw();
+  group.add(molecule);
+  group.add(simpleText);
+  group.add(ringMolecule);
+  group.add(ringMolecule2);
+  group.add(atom);
+  group.on('mouseover', function() {
+	document.body.style.cursor = 'pointer';
+  });
+  group.on('mouseout', function() {
+	document.body.style.cursor = 'default';
+  });
+  layer.add(group).draw();
   anim.start();
 });
