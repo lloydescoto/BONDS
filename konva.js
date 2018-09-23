@@ -117,10 +117,46 @@ var elements = [
 		shell: 2
 	},
 	{
-		name: 'Calcium',
-		atomic: 20,
+		name: 'Beryllium',
+		atomic: 4,
 		type: 'Metal',
-		shell: 4
+		shell: 2
+	},
+	{
+		name: 'Sodium',
+		atomic: 11,
+		type: 'Metal',
+		shell: 3
+	},
+	{
+		name: 'Carbon',
+		atomic: 6,
+		type: 'Nonmetal',
+		shell: 2
+	},
+	{
+		name: 'Nitrogen',
+		atomic: 7,
+		type: 'Nonmetal',
+		shell: 2
+	},
+	{
+		name: 'Oxygen',
+		atomic: 8,
+		type: 'Nonmetal',
+		shell: 2
+	},
+	{
+		name: 'Flourine',
+		atomic: 9,
+		type: 'Nonmetal',
+		shell: 2
+	},
+	{
+		name: 'Neon',
+		atomic: 10,
+		type: 'Nonmetal',
+		shell: 2
 	}
 ]
 
@@ -139,6 +175,7 @@ var stage = new Konva.Stage({
   width: width,
   height: height
 });
+
 console.log(distributeElectron(elements[0]));
 console.log(checkShells(distributeElectron(elements[0])));
 console.log('');
@@ -149,7 +186,36 @@ console.log(distributeElectron(elements[0]));
 console.log(checkShells(distributeElectron(elements[0])));
 var layer = new Konva.Layer();
 var buttonLayer = new Konva.Layer();
-stage.add(buttonLayer, layer);
+var tooltipLayer = new Konva.Layer();
+stage.add(buttonLayer, layer, tooltipLayer);
+var tooltip = new Konva.Label({
+        opacity: 0.75,
+        visible: false,
+        listening: false
+});
+
+tooltip.add(new Konva.Tag({
+	fill: 'black',
+	pointerDirection: 'down',
+	pointerWidth: 10,
+	pointerHeight: 10,
+	lineJoin: 'round',
+	shadowColor: 'black',
+	shadowBlur: 10,
+	shadowOffset: 10,
+	shadowOpacity: 0.2
+}));
+
+tooltip.add(new Konva.Text({
+	text: '',
+	fontFamily: 'Calibri',
+	fontSize: 18,
+	padding: 5,
+	fill: 'white'
+}));
+
+tooltipLayer.add(tooltip);
+
 var hydrogenText = new Konva.Text({
       x: 50 + 13,
       y: 50 + 10,
@@ -165,11 +231,32 @@ var hydrogenButton = new Konva.Rect({
 	height: 50,
 	fill: 'green',
 	stroke: 'black',
-	strokeWidth: 2
+	strokeWidth: 2,
+	cornerRadius: 5
+});
+var heliumText = new Konva.Text({
+      x: 100 + 13,
+      y: 100 + 10,
+      text: 'He',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white'
+  });
+var heliumButton = new Konva.Rect({
+	x: 100,
+	y: 100,
+	width: 50,
+	height: 50,
+	fill: 'green',
+	stroke: 'black',
+	strokeWidth: 2,
+	cornerRadius: 5
 });
 
 buttonLayer.add(hydrogenButton).draw();
 buttonLayer.add(hydrogenText).draw();
+buttonLayer.add(heliumButton).draw();
+buttonLayer.add(heliumText).draw();
 hydrogenButton.on('mouseenter', function() {
 	this.fill('red');
 	hydrogenText.fill('black');
@@ -267,7 +354,8 @@ stage.on('click', function (e) {
 	y: position['y'],
 	fill: 'red',
 	stroke: 'black',
-	radius: 30
+	radius: 30,
+	name: 'Hydrogen'
   });
   var ringMolecule = new Konva.Ring({
 	x: position['x'],
@@ -308,11 +396,25 @@ stage.on('click', function (e) {
   group.add(ringMolecule);
   group.add(ringMolecule2);
   group.add(atom);
-  group.on('mouseover', function() {
+  group.on('mouseover', function(e) {
 	document.body.style.cursor = 'pointer';
-  });
+	var node = e.target;
+	  if (node) {
+		// update tooltip
+		var mousePos = node.getStage().getPointerPosition();
+		tooltip.position({
+			x : mousePos.x,
+			y : mousePos.y - 5
+		});
+		tooltip.getText().setText("node: " + node.name() + ", color: " + node.fill());
+		tooltip.show();
+		tooltipLayer.batchDraw();
+	  }
+	  });
   group.on('mouseout', function() {
 	document.body.style.cursor = 'default';
+	tooltip.hide();
+	tooltipLayer.draw();
   });
   layer.add(group).draw();
   anim.start();
