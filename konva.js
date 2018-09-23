@@ -61,18 +61,24 @@ function distributeElectron(element)
 	return shells;
 }
 
-function checkElectron(element)
+function checkShells(shell)
 {
-	var atomic = element.atomic;
-	for(var i = 0; i < element.shell; i++)
+	for(var i = 0;i <= shell.length; i++)
 	{
-		if(atomic <= 0)
-			break;
 		if(i == 0)
-			atomic -= 2;
-		if(i == 1)
-			atomic -= 8;
+		{
+			if(shell[i] != 2)
+				return 'Unstable';
+		}
+		else
+		{
+			if(shell[i] == 0)
+				return 'stable';
+			if(shell[i] != 8)
+				return 'Unstable';
+		}
 	}
+	return 'Stable';
 }
 
 var elements = [
@@ -116,7 +122,8 @@ var stage = new Konva.Stage({
   width: width,
   height: height
 });
-console.log(distributeElectron(elements[3]));
+console.log(distributeElectron(elements[0]));
+console.log(checkShells(distributeElectron(elements[0])));
 var layer = new Konva.Layer();
 var buttonLayer = new Konva.Layer();
 stage.add(buttonLayer, layer);
