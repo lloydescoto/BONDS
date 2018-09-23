@@ -1,6 +1,54 @@
 var width = window.innerWidth;
 var height = window.innerHeight;
 
+function recognizeBonding(elements){
+	var type;
+	var metalsCount = 0;
+	var nonmetalsCount = 0;
+	for(i in elements)
+	{
+		if(elements[i].type == 'Nonmetal')
+			nonmetalsCount++;
+		if(elements[i].type == 'Metal')
+			metalsCount++;
+	}
+	if(metalsCount == 0 && nonmetalsCount == 0)
+		return 'No Bonding';
+	if(metalsCount > 0 && nonmetalsCount == 0)
+		return 'No Bonding';
+	if(metalsCount == 0 && nonmetalsCount > 0)
+		return 'Covalent Bonding';
+	if(metalsCount > 0 && nonmetalsCount > 0)
+		return 'Ionic Bonding';
+}
+
+var elements = [
+	{
+		name: 'Hydrogen',
+		atomic: 1,
+		type: 'Nonmetal'
+	},
+	{
+		name: 'Helium',
+		atomic: 2,
+		type: 'Nonmetal'
+	},
+	{
+		name: 'Lithium',
+		atomic: 3,
+		type: 'Metal'
+	}
+]
+
+for (i in elements)
+{
+	console.log(elements[i].name);
+}
+console.log(elements[1].atomic);
+var pickedElements = [];
+pickedElements.push(elements[2]);
+pickedElements.push(elements[0]);
+console.log(recognizeBonding(pickedElements));
 var stage = new Konva.Stage({
   container: document.getElementById("container"),
   width: width,
@@ -10,7 +58,14 @@ var stage = new Konva.Stage({
 var layer = new Konva.Layer();
 var buttonLayer = new Konva.Layer();
 stage.add(buttonLayer, layer);
-
+var hydrogenText = new Konva.Text({
+      x: 50 + 13,
+      y: 50 + 10,
+      text: 'H',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white'
+  });
 var hydrogenButton = new Konva.Rect({
 	x: 50,
 	y: 50,
@@ -22,12 +77,15 @@ var hydrogenButton = new Konva.Rect({
 });
 
 buttonLayer.add(hydrogenButton).draw();
+buttonLayer.add(hydrogenText).draw();
 hydrogenButton.on('mouseenter', function() {
 	this.fill('red');
+	hydrogenText.fill('black');
 	buttonLayer.draw();
 });
 hydrogenButton.on('mouseleave', function() {
 	this.fill('green');
+	hydrogenText.fill('white');
 	buttonLayer.draw();
 });
 hydrogenButton.on('click', function() {
