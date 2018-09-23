@@ -1,7 +1,8 @@
 var width = window.innerWidth;
 var height = window.innerHeight;
 
-function recognizeBonding(elements){
+function recognizeBonding(elements)
+{
 	var type;
 	var metalsCount = 0;
 	var nonmetalsCount = 0;
@@ -22,21 +23,82 @@ function recognizeBonding(elements){
 		return 'Ionic Bonding';
 }
 
+function distributeElectron(element)
+{
+	var shells = [];
+	var atomic = element.atomic;
+	for(var i = 1;i <= 7;i++)
+	{
+		if(atomic == 0)
+			break;
+		if(i == 1)
+		{
+			if(atomic - 2 < 0)
+			{
+				shells.push(atomic);
+				atomic = 0;
+			}
+			else
+			{
+				shells.push(2);
+				atomic -= 2;
+			}
+		}
+		else(i == 2)
+		{
+			if(atomic - 8 < 0)
+			{
+				shells.push(atomic);
+				atomic = 0;
+			}
+			else
+			{
+				shells.push(8);
+				atomic -= 8;
+			}
+		}
+	}
+	return shells;
+}
+
+function checkElectron(element)
+{
+	var atomic = element.atomic;
+	for(var i = 0; i < element.shell; i++)
+	{
+		if(atomic <= 0)
+			break;
+		if(i == 0)
+			atomic -= 2;
+		if(i == 1)
+			atomic -= 8;
+	}
+}
+
 var elements = [
 	{
 		name: 'Hydrogen',
 		atomic: 1,
-		type: 'Nonmetal'
+		type: 'Nonmetal',
+		shell: 1
 	},
 	{
 		name: 'Helium',
 		atomic: 2,
-		type: 'Nonmetal'
+		type: 'Nonmetal',
+		shell: 1
 	},
 	{
 		name: 'Lithium',
 		atomic: 3,
-		type: 'Metal'
+		type: 'Metal',
+		shell: 2
+	},
+	{
+		name: 'Calcium',
+		atomic: 20,
+		type: 'Metal',
+		shell: 4
 	}
 ]
 
@@ -54,7 +116,7 @@ var stage = new Konva.Stage({
   width: width,
   height: height
 });
-
+console.log(distributeElectron(elements[3]));
 var layer = new Konva.Layer();
 var buttonLayer = new Konva.Layer();
 stage.add(buttonLayer, layer);
