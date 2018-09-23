@@ -235,16 +235,70 @@ var hydrogenButton = new Konva.Rect({
 	cornerRadius: 5
 });
 var heliumText = new Konva.Text({
-      x: 100 + 13,
-      y: 100 + 10,
+      x: 105 + 6,
+      y: 50 + 10,
       text: 'He',
       fontSize: 30,
       fontFamily: 'Arial',
       fill: 'white'
   });
 var heliumButton = new Konva.Rect({
-	x: 100,
-	y: 100,
+	x: 105,
+	y: 50,
+	width: 50,
+	height: 50,
+	fill: 'green',
+	stroke: 'black',
+	strokeWidth: 2,
+	cornerRadius: 5
+});
+var lithiumText = new Konva.Text({
+      x: 160 + 12,
+      y: 50 + 10,
+      text: 'Li',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white'
+  });
+var lithiumButton = new Konva.Rect({
+	x: 160,
+	y: 50,
+	width: 50,
+	height: 50,
+	fill: 'green',
+	stroke: 'black',
+	strokeWidth: 2,
+	cornerRadius: 5
+});
+var berylliumText = new Konva.Text({
+      x: 50 + 6,
+      y: 105 + 10,
+      text: 'Be',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white'
+  });
+var berylliumButton = new Konva.Rect({
+	x: 50,
+	y: 105,
+	width: 50,
+	height: 50,
+	fill: 'green',
+	stroke: 'black',
+	strokeWidth: 2,
+	cornerRadius: 5
+});
+var sodiumText = new Konva.Text({
+      x: 105 + 6,
+      y: 105 + 10,
+      text: 'Na',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white'
+  });
+var sodiumButton = new Konva.Rect({
+	x: 105,
+	y: 105,
 	width: 50,
 	height: 50,
 	fill: 'green',
@@ -257,6 +311,12 @@ buttonLayer.add(hydrogenButton).draw();
 buttonLayer.add(hydrogenText).draw();
 buttonLayer.add(heliumButton).draw();
 buttonLayer.add(heliumText).draw();
+buttonLayer.add(lithiumButton).draw();
+buttonLayer.add(lithiumText).draw();
+buttonLayer.add(berylliumButton).draw();
+buttonLayer.add(berylliumText).draw();
+buttonLayer.add(sodiumButton).draw();
+buttonLayer.add(sodiumText).draw();
 hydrogenButton.on('mouseenter', function() {
 	this.fill('red');
 	hydrogenText.fill('black');
@@ -267,6 +327,101 @@ hydrogenButton.on('mouseleave', function() {
 	hydrogenText.fill('white');
 	buttonLayer.draw();
 });
+hydrogenText.on('mouseenter', function() {
+	hydrogenButton.fill('red');
+	hydrogenText.fill('black');
+	buttonLayer.draw();
+});
+hydrogenText.on('mouseleave', function() {
+	hydrogenButton.fill('green');
+	hydrogenText.fill('white');
+	buttonLayer.draw();
+});
+
+heliumButton.on('mouseenter', function() {
+	this.fill('red');
+	heliumText.fill('black');
+	buttonLayer.draw();
+});
+heliumButton.on('mouseleave', function() {
+	this.fill('green');
+	heliumText.fill('white');
+	buttonLayer.draw();
+});
+heliumText.on('mouseenter', function() {
+	heliumButton.fill('red');
+	heliumText.fill('black');
+	buttonLayer.draw();
+});
+heliumText.on('mouseleave', function() {
+	heliumButton.fill('green');
+	heliumText.fill('white');
+	buttonLayer.draw();
+});
+
+lithiumButton.on('mouseenter', function() {
+	this.fill('red');
+	lithiumText.fill('black');
+	buttonLayer.draw();
+});
+lithiumButton.on('mouseleave', function() {
+	this.fill('green');
+	lithiumText.fill('white');
+	buttonLayer.draw();
+});
+lithiumText.on('mouseenter', function() {
+	lithiumButton.fill('red');
+	lithiumText.fill('black');
+	buttonLayer.draw();
+});
+lithiumText.on('mouseleave', function() {
+	lithiumButton.fill('green');
+	lithiumText.fill('white');
+	buttonLayer.draw();
+});
+
+berylliumButton.on('mouseenter', function() {
+	this.fill('red');
+	berylliumText.fill('black');
+	buttonLayer.draw();
+});
+berylliumButton.on('mouseleave', function() {
+	this.fill('green');
+	berylliumText.fill('white');
+	buttonLayer.draw();
+});
+berylliumText.on('mouseenter', function() {
+	berylliumButton.fill('red');
+	berylliumText.fill('black');
+	buttonLayer.draw();
+});
+berylliumText.on('mouseleave', function() {
+	berylliumButton.fill('green');
+	berylliumText.fill('white');
+	buttonLayer.draw();
+});
+
+sodiumButton.on('mouseenter', function() {
+	this.fill('red');
+	sodiumText.fill('black');
+	buttonLayer.draw();
+});
+sodiumButton.on('mouseleave', function() {
+	this.fill('green');
+	sodiumText.fill('white');
+	buttonLayer.draw();
+});
+sodiumText.on('mouseenter', function() {
+	sodiumButton.fill('red');
+	sodiumText.fill('black');
+	buttonLayer.draw();
+});
+sodiumText.on('mouseleave', function() {
+	sodiumButton.fill('green');
+	sodiumText.fill('white');
+	buttonLayer.draw();
+});
+
 hydrogenButton.on('click', function() {
   var group = new Konva.Group({
 	draggable: true 
@@ -312,7 +467,7 @@ hydrogenButton.on('click', function() {
 	stroke: 'black',
 	radius: 5,
 	offset: {
-		x: -100,
+		x: -40,
 		y: 0
 	}
   });
@@ -366,15 +521,6 @@ stage.on('click', function (e) {
 	stroke: 'black',
 	strokeWidth: 1
   });
-  var ringMolecule2 = new Konva.Ring({
-	x: position['x'],
-	y: position['y'],
-	innerRadius: 50,
-	outerRadius: 51,
-	fill: 'yellow',
-	stroke: 'black',
-	strokeWidth: 1
-  });
   var atom = new Konva.Circle({
 	x: position['x'],
 	y: position['y'],
@@ -382,7 +528,7 @@ stage.on('click', function (e) {
 	stroke: 'black',
 	radius: 5,
 	offset: {
-		x: -100,
+		x: -40,
 		y: 0
 	}
   });
@@ -394,7 +540,6 @@ stage.on('click', function (e) {
   group.add(molecule);
   group.add(simpleText);
   group.add(ringMolecule);
-  group.add(ringMolecule2);
   group.add(atom);
   group.on('mouseover', function(e) {
 	document.body.style.cursor = 'pointer';
