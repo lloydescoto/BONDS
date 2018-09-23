@@ -27,6 +27,11 @@ function distributeElectron(element)
 {
 	var shells = [];
 	var atomic = element.atomic;
+	if(atomic == 0)
+	{
+		shells.push(0);
+		return shells;
+	}
 	for(var i = 1;i <= 7;i++)
 	{
 		if(atomic == 0)
@@ -67,6 +72,8 @@ function checkShells(shell)
 	{
 		if(i == 0)
 		{
+			if(shell[i] == 0)
+				return 'Stable';
 			if(shell[i] != 2)
 				return 'Unstable';
 		}
@@ -74,11 +81,20 @@ function checkShells(shell)
 		{
 			if(shell[i] == 0)
 				return 'stable';
+			if(shell[i] == 2)
+				return 'stable';
 			if(shell[i] != 8)
 				return 'Unstable';
 		}
 	}
 	return 'Stable';
+}
+
+function transferElectron(sourceElement, destinationElement)
+{
+	sourceElement.atomic = sourceElement.atomic - 1;
+	destinationElement.atomic += 1;
+	return sourceElement, destinationElement;
 }
 
 var elements = [
@@ -117,11 +133,18 @@ var pickedElements = [];
 pickedElements.push(elements[2]);
 pickedElements.push(elements[0]);
 console.log(recognizeBonding(pickedElements));
+
 var stage = new Konva.Stage({
   container: document.getElementById("container"),
   width: width,
   height: height
 });
+console.log(distributeElectron(elements[0]));
+console.log(checkShells(distributeElectron(elements[0])));
+console.log('');
+elements[0], elements[2] = transferElectron(elements[0],elements[2]);
+console.log(distributeElectron(elements[2]));
+console.log(checkShells(distributeElectron(elements[2])));
 console.log(distributeElectron(elements[0]));
 console.log(checkShells(distributeElectron(elements[0])));
 var layer = new Konva.Layer();
