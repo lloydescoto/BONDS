@@ -14,13 +14,13 @@ function recognizeBonding(elements)
 			metalsCount++;
 	}
 	if(metalsCount == 0 && nonmetalsCount == 0)
-		return 'No Bonding';
+		return 'No';
 	if(metalsCount > 0 && nonmetalsCount == 0)
-		return 'No Bonding';
+		return 'No';
 	if(metalsCount == 0 && nonmetalsCount > 0)
-		return 'Covalent Bonding';
+		return 'Covalent';
 	if(metalsCount > 0 && nonmetalsCount > 0)
-		return 'Ionic Bonding';
+		return 'Ionic';
 }
 
 function distributeElectron(element)
@@ -49,7 +49,7 @@ function distributeElectron(element)
 				atomic -= 2;
 			}
 		}
-		else(i == 2)
+		else
 		{
 			if(atomic - 8 < 0)
 			{
@@ -68,26 +68,12 @@ function distributeElectron(element)
 
 function checkShells(shell)
 {
-	for(var i = 0;i <= shell.length; i++)
+	if(shell[shell.length - 1] != 0 && shell[shell.length - 1] != 2 && shell[shell.length - 1] != 8)
 	{
-		if(i == 0)
-		{
-			if(shell[i] == 0)
-				return 'Stable';
-			if(shell[i] != 2)
-				return 'Unstable';
-		}
-		else
-		{
-			if(shell[i] == 0)
-				return 'stable';
-			if(shell[i] == 2)
-				return 'stable';
-			if(shell[i] != 8)
-				return 'Unstable';
-		}
+		return 'Unstable';
 	}
-	return 'Stable';
+	else
+		return 'Stable';
 }
 
 function transferElectron(sourceElement, destinationElement)
@@ -95,6 +81,108 @@ function transferElectron(sourceElement, destinationElement)
 	sourceElement.atomic = sourceElement.atomic - 1;
 	destinationElement.atomic += 1;
 	return sourceElement, destinationElement;
+}
+
+function countStable(elements)
+{
+	var stableCount = 0;
+	var unstableCount = 0;
+	for(i in elements)
+	{
+		if(checkShells(distributeElectron(elements[i])) == 'Stable')
+		{
+			stableCount++;
+		}
+		else
+		{
+			unstableCount++;
+		}
+	}
+	return stableCount;
+}
+
+function countUnstable(elements)
+{
+	var stableCount = 0;
+	var unstableCount = 0;
+	for(i in elements)
+	{
+		if(checkShells(distributeElectron(elements[i])) == 'Stable')
+		{
+			stableCount++;
+		}
+		else
+		{
+			unstableCount++;
+		}
+	}
+	return unstableCount;
+}
+
+function ionicBonding(elements)
+{
+	var stableCount = countStable(elements);
+	var unstableCount = countUnstable(elements);
+	for(i in elements)
+	{
+		if(checkShells(distributeElectron(elements[i])) == 'Stable')
+		{
+			
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])));
+		}
+		else
+		{
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])));
+		}
+	}
+	console.log('');
+	for(var i = 0;i < elements.length; i++)
+	{
+		while(countUnstable(elements) > 2)
+		{		
+			if(checkShells(distributeElectron(elements[i])) != 'Stable')
+			{
+				elements[i], elements[i+1] = transferElectron(elements[i], elements[i+1]);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	console.log('');
+	for(i in elements)
+	{
+		if(checkShells(distributeElectron(elements[i])) == 'Stable')
+		{
+			console.log(elements[i].name + ' ' + distributeElectron(elements[i]));
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])));
+		}
+		else
+		{
+			console.log(elements[i].name + ' ' + distributeElectron(elements[i]));
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])));
+		}
+	}
+}
+
+function covalentBonding(elements)
+{
+	var stableCount = 0;
+	var unstableCount = 0;
+	for(i in elements)
+	{
+		if(checkShells(distributeElectron(elements[i])) == 'Stable')
+		{
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])))
+			stableCount++;
+		}
+		else
+		{
+			console.log(elements[i].name + ' ' + checkShells(distributeElectron(elements[i])))
+			unstableCount++;
+		}
+	}
 }
 
 var elements = [
@@ -160,30 +248,12 @@ var elements = [
 	}
 ]
 
-for (i in elements)
-{
-	console.log(elements[i].name);
-}
-console.log(elements[1].atomic);
-var pickedElements = [];
-pickedElements.push(elements[2]);
-pickedElements.push(elements[0]);
-console.log(recognizeBonding(pickedElements));
-
 var stage = new Konva.Stage({
   container: document.getElementById("container"),
   width: width,
   height: height
 });
 
-console.log(distributeElectron(elements[0]));
-console.log(checkShells(distributeElectron(elements[0])));
-console.log('');
-elements[0], elements[2] = transferElectron(elements[0],elements[2]);
-console.log(distributeElectron(elements[2]));
-console.log(checkShells(distributeElectron(elements[2])));
-console.log(distributeElectron(elements[0]));
-console.log(checkShells(distributeElectron(elements[0])));
 var layer = new Konva.Layer();
 var buttonLayer = new Konva.Layer();
 var tooltipLayer = new Konva.Layer();
@@ -215,6 +285,27 @@ tooltip.add(new Konva.Text({
 }));
 
 tooltipLayer.add(tooltip);
+
+var simulateText = new Konva.Text({
+	x: 200 + 10,
+    y: 200 + 10,
+    text: 'Simulate',
+    fontSize: 30,
+    fontFamily: 'Arial',
+    fill: 'white'
+});
+
+var simulateButton = new Konva.Rect({
+	x: 200,
+	y: 200,
+	width: 140,
+	height: 50,
+	fill: 'green',
+	stroke: 'black',
+	strokeWidth: 2,
+	cornerRadius: 5
+});
+
 
 var hydrogenText = new Konva.Text({
       x: 50 + 13,
@@ -317,6 +408,8 @@ buttonLayer.add(berylliumButton).draw();
 buttonLayer.add(berylliumText).draw();
 buttonLayer.add(sodiumButton).draw();
 buttonLayer.add(sodiumText).draw();
+buttonLayer.add(simulateButton).draw();
+buttonLayer.add(simulateText).draw();
 hydrogenButton.on('mouseenter', function() {
 	this.fill('red');
 	hydrogenText.fill('black');
@@ -422,6 +515,15 @@ sodiumText.on('mouseleave', function() {
 	buttonLayer.draw();
 });
 
+simulateButton.on('click', function(){
+	ionicBonding(elements);
+});
+
+simulateText.on('click', function(){
+	ionicBonding(elements);
+});
+
+//Hydrogen
 hydrogenButton.on('click', function() {
   var group = new Konva.Group({
 	draggable: true 
@@ -433,76 +535,8 @@ hydrogenButton.on('click', function() {
       text: 'H',
       fontSize: 30,
       fontFamily: 'Arial',
-      fill: 'white'
-  });
-  var molecule = new Konva.Circle({
-	x: position['x'],
-	y: position['y'],
-	fill: 'red',
-	stroke: 'black',
-	radius: 30
-  });
-  var ringMolecule = new Konva.Ring({
-	x: position['x'],
-	y: position['y'],
-	innerRadius: 40,
-	outerRadius: 41,
-	fill: 'yellow',
-	stroke: 'black',
-	strokeWidth: 1
-  });
-  var ringMolecule2 = new Konva.Ring({
-	x: position['x'],
-	y: position['y'],
-	innerRadius: 50,
-	outerRadius: 51,
-	fill: 'yellow',
-	stroke: 'black',
-	strokeWidth: 1
-  });
-  var atom = new Konva.Circle({
-	x: position['x'],
-	y: position['y'],
-	fill: 'red',
-	stroke: 'black',
-	radius: 5,
-	offset: {
-		x: -40,
-		y: 0
-	}
-  });
-  var angularSpeed = 90;
-  var anim = new Konva.Animation(function(frame) {
-	  var angleDiff = frame.timeDiff * angularSpeed / 1000;
-	  atom.rotate(angleDiff);
-  }, layer);
-  group.add(molecule);
-  group.add(simpleText);
-  group.add(ringMolecule);
-  group.add(ringMolecule2);
-  group.add(atom);
-  group.on('mouseover', function() {
-	document.body.style.cursor = 'pointer';
-  });
-  group.on('mouseout', function() {
-	document.body.style.cursor = 'default';
-  });
-  layer.add(group).draw();
-  anim.start();
-});
-
-stage.on('click', function (e) {
-  var group = new Konva.Group({
-	 draggable: true 
-  });
-  var position = JSON.parse(JSON.stringify(stage.getPointerPosition()));
-  var simpleText = new Konva.Text({
-      x: position['x'] - 11,
-      y: position['y'] - 15,
-      text: 'H',
-      fontSize: 30,
-      fontFamily: 'Arial',
-      fill: 'white'
+      fill: 'white',
+	  name: 'Hydrogen'
   });
   var molecule = new Konva.Circle({
 	x: position['x'],
@@ -551,7 +585,258 @@ stage.on('click', function (e) {
 			x : mousePos.x,
 			y : mousePos.y - 5
 		});
-		tooltip.getText().setText("node: " + node.name() + ", color: " + node.fill());
+		tooltip.getText().setText("Name: " + node.name() + ", Atomic: " + 1);
+		tooltip.show();
+		tooltipLayer.batchDraw();
+	  }
+	  });
+  group.on('mouseout', function() {
+	document.body.style.cursor = 'default';
+	tooltip.hide();
+	tooltipLayer.draw();
+  });
+  layer.add(group).draw();
+  anim.start();
+});
+
+hydrogenText.on('click', function() {
+  var group = new Konva.Group({
+	draggable: true 
+  });
+  var position = JSON.parse(JSON.stringify(stage.getPointerPosition()));
+  var simpleText = new Konva.Text({
+      x: position['x'] - 11,
+      y: position['y'] - 15,
+      text: 'H',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white',
+	  name: 'Hydrogen'
+  });
+  var molecule = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 30,
+	name: 'Hydrogen'
+  });
+  var ringMolecule = new Konva.Ring({
+	x: position['x'],
+	y: position['y'],
+	innerRadius: 40,
+	outerRadius: 41,
+	fill: 'yellow',
+	stroke: 'black',
+	strokeWidth: 1
+  });
+  var atom = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 5,
+	offset: {
+		x: -40,
+		y: 0
+	}
+  });
+  var angularSpeed = 90;
+  var anim = new Konva.Animation(function(frame) {
+	  var angleDiff = frame.timeDiff * angularSpeed / 1000;
+	  atom.rotate(angleDiff);
+  }, layer);
+  group.add(molecule);
+  group.add(simpleText);
+  group.add(ringMolecule);
+  group.add(atom);
+  group.on('mouseover', function(e) {
+	document.body.style.cursor = 'pointer';
+	var node = e.target;
+	  if (node) {
+		// update tooltip
+		var mousePos = node.getStage().getPointerPosition();
+		tooltip.position({
+			x : mousePos.x,
+			y : mousePos.y - 5
+		});
+		tooltip.getText().setText("Name: " + node.name() + ", Atomic: " + 1);
+		tooltip.show();
+		tooltipLayer.batchDraw();
+	  }
+	  });
+  group.on('mouseout', function() {
+	document.body.style.cursor = 'default';
+	tooltip.hide();
+	tooltipLayer.draw();
+  });
+  layer.add(group).draw();
+  anim.start();
+});
+//Helium
+heliumButton.on('click', function() {
+  var group = new Konva.Group({
+	draggable: true 
+  });
+  var position = JSON.parse(JSON.stringify(stage.getPointerPosition()));
+  var simpleText = new Konva.Text({
+      x: position['x'] - 18,
+      y: position['y'] - 15,
+      text: 'He',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white',
+	  name: 'Helium'
+  });
+  var molecule = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 30,
+	name: 'Helium'
+  });
+  var ringMolecule = new Konva.Ring({
+	x: position['x'],
+	y: position['y'],
+	innerRadius: 40,
+	outerRadius: 41,
+	fill: 'yellow',
+	stroke: 'black',
+	strokeWidth: 1
+  });
+  var atom = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 5,
+	offset: {
+		x: -40,
+		y: 0
+	}
+  });
+  var atom1 = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 5,
+	offset: {
+		x: 40,
+		y: 0
+	}
+  });
+  var angularSpeed = 90;
+  var anim = new Konva.Animation(function(frame) {
+	  var angleDiff = frame.timeDiff * angularSpeed / 1000;
+	  atom.rotate(angleDiff);
+	  atom1.rotate(angleDiff);
+  }, layer);
+  group.add(molecule);
+  group.add(simpleText);
+  group.add(ringMolecule);
+  group.add(atom);
+  group.add(atom1);
+  group.on('mouseover', function(e) {
+	document.body.style.cursor = 'pointer';
+	var node = e.target;
+	  if (node) {
+		// update tooltip
+		var mousePos = node.getStage().getPointerPosition();
+		tooltip.position({
+			x : mousePos.x,
+			y : mousePos.y - 5
+		});
+		tooltip.getText().setText("Name: " + node.name() + ", Atomic: " + 2);
+		tooltip.show();
+		tooltipLayer.batchDraw();
+	  }
+	  });
+  group.on('mouseout', function() {
+	document.body.style.cursor = 'default';
+	tooltip.hide();
+	tooltipLayer.draw();
+  });
+  layer.add(group).draw();
+  anim.start();
+});
+
+heliumText.on('click', function() {
+  var group = new Konva.Group({
+	draggable: true 
+  });
+  var position = JSON.parse(JSON.stringify(stage.getPointerPosition()));
+  var simpleText = new Konva.Text({
+      x: position['x'] - 18,
+      y: position['y'] - 15,
+      text: 'He',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      fill: 'white',
+	  name: 'Helium'
+  });
+  var molecule = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 30,
+	name: 'Helium'
+  });
+  var ringMolecule = new Konva.Ring({
+	x: position['x'],
+	y: position['y'],
+	innerRadius: 40,
+	outerRadius: 41,
+	fill: 'yellow',
+	stroke: 'black',
+	strokeWidth: 1
+  });
+  var atom = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 5,
+	offset: {
+		x: -40,
+		y: 0
+	}
+  });
+  var atom1 = new Konva.Circle({
+	x: position['x'],
+	y: position['y'],
+	fill: 'red',
+	stroke: 'black',
+	radius: 5,
+	offset: {
+		x: 40,
+		y: 0
+	}
+  });
+  var angularSpeed = 90;
+  var anim = new Konva.Animation(function(frame) {
+	  var angleDiff = frame.timeDiff * angularSpeed / 1000;
+	  atom.rotate(angleDiff);
+	  atom1.rotate(angleDiff);
+  }, layer);
+  group.add(molecule);
+  group.add(simpleText);
+  group.add(ringMolecule);
+  group.add(atom);
+  group.add(atom1);
+  group.on('mouseover', function(e) {
+	document.body.style.cursor = 'pointer';
+	var node = e.target;
+	  if (node) {
+		// update tooltip
+		var mousePos = node.getStage().getPointerPosition();
+		tooltip.position({
+			x : mousePos.x,
+			y : mousePos.y - 5
+		});
+		tooltip.getText().setText("Name: " + node.name() + ", Atomic: " + 2);
 		tooltip.show();
 		tooltipLayer.batchDraw();
 	  }
